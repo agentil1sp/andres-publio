@@ -43,4 +43,24 @@ app.get('/read/:collection_name', (req, res) => {
     })();
 });
 
+const chatCollectionRef = db.collection('chat');
+
+app.post('/chat', (req, res) => {
+  const chatItem = {
+    request: "solicitud",
+    response: "para el chatbot"
+  };
+  console.log('Nuevo item para chat:', chatItem);
+
+  chatCollectionRef.add(chatItem)
+    .then((docRef) => {
+      console.log('Nuevo documento creado con ID:', docRef.id);
+      return res.status(200).json({ id: docRef.id });
+    })
+    .catch((error) => {
+      console.error('Error al crear el documento:', error);
+      return res.status(500).json({ error: 'Error al crear el documento' });
+    });
+});
+
 app.listen(port, () => { console.log("Server running on port:" + port) });
