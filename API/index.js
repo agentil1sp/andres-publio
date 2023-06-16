@@ -1,11 +1,15 @@
 const admin = require('firebase-admin');
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 
 
 const app = express();
 app.use(cors({ origin: true }));
+
+app.use(bodyParser.json()); // Analiza el cuerpo de la solicitud como JSON
+app.use(bodyParser.urlencoded({ extended: false })); // Analiza el cuerpo de la solicitud como URL codificado
 
 
 var serviceAccount = require("./permissions.json");
@@ -45,10 +49,12 @@ app.get('/read/:collection_name', (req, res) => {
 
 const chatCollectionRef = db.collection('chat');
 
+
 app.post('/chat', (req, res) => {
+    console.log('Body de la solicitud HTTP POST:', req.body); // Imprime el cuerpo de la solicitud HTTP POST
   const chatItem = {
-    request: "solicitud",
-    response: "para el chatbot"
+    request: req.body.request,
+    response: req.body.response
   };
   console.log('Nuevo item para chat:', chatItem);
 
